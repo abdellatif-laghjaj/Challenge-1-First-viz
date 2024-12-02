@@ -3,8 +3,8 @@ function createSchoolTypeAreaDistribution(data) {
   d3.select("#schoolTypeAreaDistribution").html("");
 
   // Set up chart dimensions
-  const width = 500;
-  const height = 400;
+  const width = 400;
+  const height = 300;
   const margin = 40;
 
   // Radius
@@ -33,8 +33,8 @@ function createSchoolTypeAreaDistribution(data) {
   const svg = d3
     .select("#schoolTypeAreaDistribution")
     .append("svg")
-    .attr("width", width)
-    .attr("height", height + 100) // Extra height for the legend
+    .attr("width", width + 200) // Extra width for the legend
+    .attr("height", height)
     .append("g")
     .attr("transform", `translate(${width / 2}, ${height / 2})`);
 
@@ -81,8 +81,8 @@ function createSchoolTypeAreaDistribution(data) {
     .append("g")
     .attr(
       "transform",
-      `translate(${width / 2 - (chartData.length * 60) / 2}, ${height + 50})`
-    ); // Center legend below the chart
+      `translate(${width + 20}, ${height / 2 - (chartData.length * 10) / 2})`
+    ); // Place legend to the right
 
   legend
     .selectAll(".legend-item")
@@ -90,7 +90,7 @@ function createSchoolTypeAreaDistribution(data) {
     .enter()
     .append("g")
     .attr("class", "legend-item")
-    .attr("transform", (d, i) => `translate(${i * 60}, 0)`); // Space each legend item
+    .attr("transform", (d, i) => `translate(0, ${i * 20})`); // Space each legend item vertically
 
   // Add colored squares to the legend
   legend
