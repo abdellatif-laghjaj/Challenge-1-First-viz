@@ -93,6 +93,23 @@ function createAgeDistribution(data) {
     .style("font-size", "16px")
     .style("font-weight", "bold")
     .text("Student Age Distribution");
+
+  // X Axis Label
+  svg
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height + 40)
+    .attr("text-anchor", "middle")
+    .text("Age Group");
+
+  // Y Axis Label
+  svg
+    .append("text")
+    .attr("x", -height / 2)
+    .attr("y", -40)
+    .attr("transform", "rotate(-90)")
+    .attr("text-anchor", "middle")
+    .text("Count");
 }
 
 // Load and process data
