@@ -3,9 +3,12 @@ function createSchoolTypeAreaDistribution(data) {
   d3.select("#schoolTypeAreaDistribution").html("");
 
   // Set up chart dimensions
-  const margin = { top: 40, right: 30, bottom: 70, left: 60 };
-  const width = 500 - margin.left - margin.right;
-  const height = 400 - margin.top - margin.bottom;
+  const width = 500;
+  const height = 400;
+  const margin = 40;
+
+  // Radius
+  const radius = Math.min(width, height) / 2 - margin;
 
   // Group data by School Type and Area
   const groupedData = d3.rollup(
@@ -15,70 +18,73 @@ function createSchoolTypeAreaDistribution(data) {
   );
 
   // Convert grouped data to array
-  const chartData = Array.from(groupedData, ([key, count]) => {
-    const [schoolType, area] = key.split("-");
-    return { schoolType, area, count };
-  });
+  const chartData = Array.from(groupedData, ([key, count]) => ({
+    key,
+    count,
+  }));
+
+  // Color scale
+  const colorScale = d3
+    .scaleOrdinal()
+    .domain(chartData.map((d) => d.key))
+    .range(d3.schemeCategory10);
 
   // Create SVG
   const svg = d3
     .select("#schoolTypeAreaDistribution")
     .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("width", width)
+    .attr("height", height)
     .append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+    .attr("transform", `translate(${width / 2}, ${height / 2})`);
 
-  // Color scale
-  const colorScale = d3
-    .scaleOrdinal()
-    .domain(chartData.map((d) => d.schoolType + "-" + d.area))
-    .range(["#3498db", "#2ecc71", "#e74c3c", "#f39c12"]);
+  // Create pie generator
+  const pie = d3
+    .pie()
+    .value((d) => d.count)
+    .sort(null);
 
-  // X Scale
-  const x = d3
-    .scaleBand()
-    .range([0, width])
-    .domain(chartData.map((d) => d.schoolType + "-" + d.area))
-    .padding(0.1);
+  const pieData = pie(chartData);
 
-  // Y Scale
-  const y = d3
-    .scaleLinear()
-    .range([height, 0])
-    .domain([0, d3.max(chartData, (d) => d.count)]);
+  // Create arc generator
+  const arc = d3
+    .arc()
+    .innerRadius(radius * 0.5) // Inner radius for donut effect
+    .outerRadius(radius);
 
-  // X Axis
+  const outerArc = d3
+    .arc()
+    .innerRadius(radius * 0.6)
+    .outerRadius(radius * 0.6);
+
+  // Add slices
   svg
-    .append("g")
-    .attr("transform", `translate(0,${height})`)
-    .call(d3.axisBottom(x))
-    .selectAll("text")
-    .style("text-anchor", "middle")
-    .attr("transform", "rotate(-45)");
-
-  // Y Axis
-  svg.append("g").call(d3.axisLeft(y));
-
-  // Bars
-  svg
-    .selectAll(".bar")
-    .data(chartData)
+    .selectAll("path")
+    .data(pieData)
     .enter()
-    .append("rect")
-    .attr("class", "bar")
-    .attr("x", (d) => x(d.schoolType + "-" + d.area))
-    .attr("width", x.bandwidth())
-    .attr("y", (d) => y(d.count))
-    .attr("height", (d) => height - y(d.count))
-    .attr("fill", (d) => colorScale(d.schoolType + "-" + d.area))
-    .attr("opacity", 0.7);
+    .append("path")
+    .attr("d", arc)
+    .attr("fill", (d) => colorScale(d.data.key))
+    .attr("stroke", "white")
+    .style("stroke-width", "2px")
+    .style("opacity", 0.8);
+
+  // Add labels
+  svg
+    .selectAll("text")
+    .data(pieData)
+    .enter()
+    .append("text")
+    .attr("transform", (d) => `translate(${outerArc.centroid(d)})`)
+    .style("text-anchor", "middle")
+    .style("font-size", "12px")
+    .text((d) => d.data.key);
 
   // Title
   svg
     .append("text")
-    .attr("x", width / 2)
-    .attr("y", -20)
+    .attr("x", 0)
+    .attr("y", -height / 2 + margin)
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
     .style("font-weight", "bold")
