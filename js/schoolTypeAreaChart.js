@@ -6,6 +6,7 @@ function createSchoolTypeAreaDistribution(data) {
   const width = 400;
   const height = 300;
   const margin = 40;
+  const titleMargin = 34;
 
   // Radius
   const radius = Math.min(width, height) / 2 - margin;
@@ -34,9 +35,9 @@ function createSchoolTypeAreaDistribution(data) {
     .select("#schoolTypeAreaDistribution")
     .append("svg")
     .attr("width", width + 200) // Extra width for the legend
-    .attr("height", height)
+    .attr("height", height + titleMargin) // Extra height for title margin
     .append("g")
-    .attr("transform", `translate(${width / 2}, ${height / 2})`);
+    .attr("transform", `translate(${width / 2}, ${height / 2 + titleMargin})`);
 
   // Create pie generator
   const pie = d3
@@ -68,11 +69,33 @@ function createSchoolTypeAreaDistribution(data) {
   svg
     .append("text")
     .attr("x", 0)
-    .attr("y", -height / 2 + margin)
+    .attr("y", -height / 2 - titleMargin / 2)
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
     .style("font-weight", "bold")
     .text("School Type and Area Distribution");
+
+  // Add percentage labels inside each slice
+  svg
+    .selectAll("path")
+    .data(pieData)
+    .enter()
+    .append("text")
+    .attr("transform", (d) => {
+      const centroid = arc.centroid(d);
+      return `translate(${centroid[0]}, ${centroid[1]})`;
+    })
+    .attr("text-anchor", "middle")
+    .attr("dy", ".35em") // Adjust vertical position
+    .style("font-size", "12px")
+    .style("font-weight", "bold")
+    .text((d) => {
+      const percentage = (
+        (d.data.count / d3.sum(chartData, (d) => d.count)) *
+        100
+      ).toFixed(1);
+      return `${percentage}%`; // Display percentage
+    });
 
   // Add legend
   const legend = d3
