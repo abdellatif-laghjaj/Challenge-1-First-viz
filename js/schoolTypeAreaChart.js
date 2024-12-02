@@ -34,7 +34,7 @@ function createSchoolTypeAreaDistribution(data) {
     .select("#schoolTypeAreaDistribution")
     .append("svg")
     .attr("width", width)
-    .attr("height", height)
+    .attr("height", height + 100) // Extra height for the legend
     .append("g")
     .attr("transform", `translate(${width / 2}, ${height / 2})`);
 
@@ -52,11 +52,6 @@ function createSchoolTypeAreaDistribution(data) {
     .innerRadius(radius * 0.5) // Inner radius for donut effect
     .outerRadius(radius);
 
-  const outerArc = d3
-    .arc()
-    .innerRadius(radius * 0.6)
-    .outerRadius(radius * 0.6);
-
   // Add slices
   svg
     .selectAll("path")
@@ -69,17 +64,6 @@ function createSchoolTypeAreaDistribution(data) {
     .style("stroke-width", "2px")
     .style("opacity", 0.8);
 
-  // Add labels
-  svg
-    .selectAll("text")
-    .data(pieData)
-    .enter()
-    .append("text")
-    .attr("transform", (d) => `translate(${outerArc.centroid(d)})`)
-    .style("text-anchor", "middle")
-    .style("font-size", "12px")
-    .text((d) => d.data.key);
-
   // Title
   svg
     .append("text")
@@ -89,6 +73,41 @@ function createSchoolTypeAreaDistribution(data) {
     .style("font-size", "16px")
     .style("font-weight", "bold")
     .text("School Type and Area Distribution");
+
+  // Add legend
+  const legend = d3
+    .select("#schoolTypeAreaDistribution")
+    .select("svg")
+    .append("g")
+    .attr(
+      "transform",
+      `translate(${width / 2 - (chartData.length * 60) / 2}, ${height + 50})`
+    ); // Center legend below the chart
+
+  legend
+    .selectAll(".legend-item")
+    .data(chartData)
+    .enter()
+    .append("g")
+    .attr("class", "legend-item")
+    .attr("transform", (d, i) => `translate(${i * 60}, 0)`); // Space each legend item
+
+  // Add colored squares to the legend
+  legend
+    .selectAll(".legend-item")
+    .append("rect")
+    .attr("width", 15)
+    .attr("height", 15)
+    .attr("fill", (d) => colorScale(d.key));
+
+  // Add labels to the legend
+  legend
+    .selectAll(".legend-item")
+    .append("text")
+    .attr("x", 20)
+    .attr("y", 12)
+    .style("font-size", "12px")
+    .text((d) => d.key);
 }
 
 // Load and process data
