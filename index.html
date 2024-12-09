@@ -10,8 +10,49 @@
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
     <link rel="stylesheet" href="css/custom-styles.css" />
     <link rel="stylesheet" href="css/styles.css" />
+
+    <style>
+      .collapse {
+        transition: all 0.3s ease;
+      }
+      .card-header .btn-light {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+      }
+      .card-header .btn-light:hover {
+        background-color: rgba(255, 255, 255, 0.9);
+      }
+      .card-body .card {
+        box-shadow: none;
+      }
+      .modal-header .close {
+        padding: 1rem;
+        margin: -1rem -1rem -1rem auto;
+        opacity: 0.8;
+      }
+      .modal-header .close:hover {
+        opacity: 1;
+      }
+      .modal-body {
+        padding: 1.5rem;
+      }
+      .modal-body ul {
+        padding-left: 1.5rem;
+        margin-bottom: 0;
+      }
+      .modal-body li {
+        margin-bottom: 0.5rem;
+      }
+      .modal-body li:last-child {
+        margin-bottom: 0;
+      }
+    </style>
 
     <!-- Favicon with Higher Quality Icon -->
     <link
@@ -83,14 +124,21 @@
         <!-- Age Distribution Chart -->
         <div class="col-md-6">
           <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-              <h3 class="card-title">Age Distribution</h3>
+            <div
+              class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+            >
+              <h3 class="card-title mb-0">Age Distribution</h3>
+              <button
+                class="btn btn-light btn-sm"
+                type="button"
+                data-toggle="modal"
+                data-target="#ageChartModal"
+              >
+                <i class="fas fa-info-circle"></i> Why this chart?
+              </button>
             </div>
             <div class="card-body">
               <div id="ageDistribution"></div>
-              <p class="chart-explanation text-muted mt-3">
-                Detailed breakdown of student ages in the dataset.
-              </p>
             </div>
           </div>
         </div>
@@ -98,14 +146,21 @@
         <!-- School Type Distribution Chart -->
         <div class="col-md-6">
           <div class="card mb-4">
-            <div class="card-header bg-success text-white">
-              <h3 class="card-title">School Type & Area Distribution</h3>
+            <div
+              class="card-header bg-success text-white d-flex justify-content-between align-items-center"
+            >
+              <h3 class="card-title mb-0">School Type & Area Distribution</h3>
+              <button
+                class="btn btn-light btn-sm"
+                type="button"
+                data-toggle="modal"
+                data-target="#schoolTypeModal"
+              >
+                <i class="fas fa-info-circle"></i> Why this chart?
+              </button>
             </div>
             <div class="card-body">
               <div id="schoolTypeAreaDistribution"></div>
-              <p class="chart-explanation text-muted mt-3">
-                Visualization of school types and geographical areas.
-              </p>
             </div>
           </div>
         </div>
@@ -113,19 +168,26 @@
         <!-- Resource Availability -->
         <div class="col-12">
           <div class="card mb-4">
-            <div class="card-header bg-success text-white">
-              <h3 class="card-title">
+            <div
+              class="card-header bg-success text-white d-flex justify-content-between align-items-center"
+            >
+              <h3 class="card-title mb-0">
                 Clustered Bar Chart: Resource Availability
               </h3>
+              <button
+                class="btn btn-light btn-sm"
+                type="button"
+                data-toggle="modal"
+                data-target="#resourceModal"
+              >
+                <i class="fas fa-info-circle"></i> Why this chart?
+              </button>
             </div>
             <div class="card-body">
               <div
                 id="resourceAvailability"
                 class="d-flex justify-content-center"
               ></div>
-              <p class="chart-explanation text-muted mt-3">
-                Visualization of school types and geographical areas.
-              </p>
             </div>
           </div>
         </div>
@@ -133,15 +195,27 @@
         <!-- Student Performance Radar Chart -->
         <div class="col-12">
           <div class="card">
-            <div class="card-header bg-info text-white">
-              <h3 class="card-title">Individual Student Performance Radar</h3>
+            <div
+              class="card-header bg-info text-white d-flex justify-content-between align-items-center"
+            >
+              <h3 class="card-title mb-0">
+                Individual Student Performance Radar
+              </h3>
+              <button
+                class="btn btn-light btn-sm"
+                type="button"
+                data-toggle="modal"
+                data-target="#radarModal"
+              >
+                <i class="fas fa-info-circle"></i> Why this chart?
+              </button>
             </div>
             <div class="card-body">
               <div class="row">
                 <div class="col-md-4">
-                  <label for="student-select" class="font-weight-bold">
-                    Select Student:
-                  </label>
+                  <label for="student-select" class="font-weight-bold"
+                    >Select Student:</label
+                  >
                   <select
                     id="student-select"
                     class="form-control mb-3"
@@ -151,10 +225,192 @@
                   <div id="spider-chart"></div>
                 </div>
               </div>
-              <p class="chart-explanation text-muted mt-3">
-                Comprehensive performance metrics across multiple educational
-                domains.
-              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modals for Chart Explanations -->
+        <!-- Age Distribution Modal -->
+        <div
+          class="modal fade"
+          id="ageChartModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="ageChartModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="ageChartModalLabel">
+                  Why a Bar Chart for Age Distribution?
+                </h5>
+                <button
+                  type="button"
+                  class="close text-white"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>We chose a bar chart for age distribution because:</p>
+                <ul>
+                  <li>
+                    It effectively shows the frequency of different age groups
+                  </li>
+                  <li>
+                    Makes it easy to compare the number of students across
+                    different ages
+                  </li>
+                  <li>
+                    Helps identify patterns and outliers in the age distribution
+                  </li>
+                  <li>
+                    Provides clear visual representation of the most common age
+                    groups
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- School Type Modal -->
+        <div
+          class="modal fade"
+          id="schoolTypeModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="schoolTypeModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="schoolTypeModalLabel">
+                  Why a Grouped Chart for School Distribution?
+                </h5>
+                <button
+                  type="button"
+                  class="close text-white"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>This visualization was chosen because:</p>
+                <ul>
+                  <li>
+                    It shows the relationship between school types and
+                    geographical areas
+                  </li>
+                  <li>Enables easy comparison between different categories</li>
+                  <li>
+                    Highlights the distribution of schools across different
+                    regions
+                  </li>
+                  <li>
+                    Helps identify any geographical patterns in school types
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resource Availability Modal -->
+        <div
+          class="modal fade"
+          id="resourceModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="resourceModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="resourceModalLabel">
+                  Why a Clustered Bar Chart for Resources?
+                </h5>
+                <button
+                  type="button"
+                  class="close text-white"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>We selected a clustered bar chart because:</p>
+                <ul>
+                  <li>
+                    It effectively displays multiple resource categories side by
+                    side
+                  </li>
+                  <li>
+                    Makes it easy to compare resource availability across
+                    different groups
+                  </li>
+                  <li>
+                    Shows the distribution of resources clearly and intuitively
+                  </li>
+                  <li>Helps identify any resource gaps or patterns</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Performance Modal -->
+        <div
+          class="modal fade"
+          id="radarModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="radarModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="radarModalLabel">
+                  Why a Radar Chart for Student Performance?
+                </h5>
+                <button
+                  type="button"
+                  class="close text-white"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>A radar chart was chosen for this visualization because:</p>
+                <ul>
+                  <li>
+                    It shows multiple performance metrics simultaneously for
+                    each student
+                  </li>
+                  <li>
+                    Provides an intuitive way to see strengths and weaknesses of
+                    each student
+                  </li>
+                  <li>
+                    Allows for quick comparison across different performance
+                    areas
+                  </li>
+                  <li>
+                    Creates a comprehensive profile of student performance
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -165,7 +421,7 @@
     <footer class="footer mt-5 py-3 bg-light">
       <div class="container text-center">
         <span class="text-muted">
-          © 2024 Student Performance Analytics | Created with ❤️ by
+          2024 Student Performance Analytics | Created with by
           <a href="https://www.github.com/abdelatif-laghjaj" target="_blank">
             Laghjaj Abdellatif
           </a>
